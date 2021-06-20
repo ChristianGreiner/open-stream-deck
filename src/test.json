@@ -1,0 +1,45 @@
+{
+    "interface": {
+        "serial": {
+            "port": "COM5"
+        }
+    },
+    "hardware": {
+        "button1": {
+            "actions": [
+                {
+                    "name": "OpenLinkAction",
+                    "values": {
+                        "link": "https://google.de"
+                    }
+                },
+                {
+                    "name": "VolumeUpAction",
+                    "values": {}
+                }
+            ]
+        },
+        "button2": {
+            "actions": [
+                {
+                    "name": "SetVolumeAction",
+                    "values": {
+                        "volume": 0
+                    }
+                },
+                {
+                    "name": "WaitAction",
+                    "values": {
+                        "time": 1000
+                    }
+                },
+                {
+                    "name": "KeyTypeAction",
+                    "values": {
+                        "keys": "STRG+SHIT+G"
+                    }
+                }
+            ]
+        }
+    }
+}
