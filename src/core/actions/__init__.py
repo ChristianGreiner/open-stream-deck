@@ -13,7 +13,7 @@ class Action(ABC):
 class WaitAction(Action):
     """Action that waits a given time"""
 
-    def __init__(self, duration: str) -> None:
+    def __init__(self, duration: int) -> None:
         super().__init__()
         self.duration = duration
 
