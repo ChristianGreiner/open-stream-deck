@@ -14,7 +14,6 @@ class SerialInterface(Interface):
     """Implementation of a serial interface"""
 
     def __init__(self, port: str) -> None:
-        self.api = SerialAPI()
         self.serialPort = serial.Serial(
             port=port, baudrate=9600, bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE
         )
@@ -40,6 +39,5 @@ class SerialInterface(Interface):
     def read(self):
         if self.serialPort.in_waiting > 0:
             serialString = self._readline()
-            text = serialString.decode("Ascii").strip()
-            value = self.api.read(text)
+            text = serialString.decode("UTF-8").strip()
             return text

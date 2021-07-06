@@ -1,7 +1,6 @@
 """A list of all devices"""
 from abc import ABC, abstractmethod
-from typing import List
-
+from typing import List, Tuple
 from actions import Action
 
 class EventNotSupportedError(Exception):
@@ -14,10 +13,7 @@ class Component(ABC):
         self.device_nr = 0
         self.slug = None
         self.id = f"{slug}_{device_nr}"
-        self.actions = {
-            'push': [],
-            'rotate': [],
-        }
+        self.actions = {}
 
     def add_action(self, event: str, action: Action):
         self.actions[event].append(action)
@@ -25,51 +21,31 @@ class Component(ABC):
     def set_actions(self, event: str, actions: List[Action]):
         self.actions[event].extend(actions)
 
-    @abstractmethod
-    def push(self):
-        """When the component is pushed"""
-        raise EventNotSupportedError()
-
-    @abstractmethod
-    def rotate(self):
-        """When the component is rotated"""
-        raise EventNotSupportedError()
+    def trigger(self, event: str):
+        for action in self.actions[event]:
+            action.execute()
 
 class Button(Component):
     def __init__(self, device_nr: str) -> None:
         super().__init__('BTN', device_nr)
-
-    def push(self):
-        """Reads the incoming data"""
-        for action in self.actions['push']:
-            action.execute()
-            
-    def rotate(self):
-        """When the component is rotated"""
-        raise EventNotSupportedError()
-
+        self.actions = {
+            'push': [],
+            'hold': []
+        }
 
 class RotaryEncoder(Component):
     def __init__(self, device_nr: str) -> None:
         super().__init__('ROTENC', device_nr)
+        self.actions = {
+            'rotate_left': [],
+            'rotate_right': [],
+        }
 
-    def push(self):
-        """Reads the incoming data"""
-        raise NotImplementedError()
-
-    def rotate(self):
-        """When the component is rotated"""
-        raise NotImplementedError()
-
-
-class PressableRotaryEncoder(RotaryEncoder):
-    def __init__(self, device_nr: str) -> None:
-        super().__init__(device_nr)
-
-    def push(self):
-        """Reads the incoming data"""
-        raise NotImplementedError()
-
-    def rotate(self):
-        """When the component is rotated"""
-        raise NotImplementedError()
+class Potentiometer(Component):
+    def __init__(self, device_nr: str, min_value: int = 0, max_value: int = 1600) -> None:
+        super().__init__('POT', device_nr)
+        self.min_value = min_value
+        self.max_value = max_value
+        self.actions = {
+            'changed': {},
+        }
